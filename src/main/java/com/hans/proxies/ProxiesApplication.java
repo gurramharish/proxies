@@ -1,5 +1,7 @@
 package com.hans.proxies;
 
+import com.hans.proxies.employee.EmployeeService;
+import com.hans.proxies.employee.EmployeeServiceProxy;
 import java.lang.annotation.*;
 import java.lang.reflect.Proxy;
 import org.springframework.aot.hint.annotation.Reflective;
@@ -7,12 +9,22 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.annotation.Order;
 
 @SpringBootApplication
 public class ProxiesApplication {
 
   public static void main(String[] args) {
     SpringApplication.run(ProxiesApplication.class, args);
+  }
+
+  @Bean
+  @Order(1)
+  ApplicationRunner employeeProxyRunner() {
+    return args -> {
+      EmployeeService service = new EmployeeServiceProxy();
+      service.create();
+    };
   }
 
   @Bean
